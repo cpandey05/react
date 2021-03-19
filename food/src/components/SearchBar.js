@@ -3,9 +3,12 @@ import { Text, View, StyleSheet, TextInput } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 //we get the props from the parent, either we can have the complete object or we can deconstruct it and have individual items
-const SearchBar = ({ searchTerm, onSearchTermChange }) => {
+const SearchBar = ({ searchTerm, onSearchTermChange, onSearchTermSubmit }) => {
   return (
     //size on feather component can go in its own stylesheet, but sice this is only one property, keeping it inline
+
+    //instead of this whole function call (newSearchTerm) => onSearchTermChange(newSearchTerm) -we can use a shortcut where we can pass the reference of the function
+    //something like onSearchTermChange -notice the parenthesis around the function name is missingin this case indicating , it is a callback
     <View style={styles.backgroundStyle}>
       <Feather name="search" style={styles.iconStyle} />
       <TextInput
@@ -14,7 +17,8 @@ const SearchBar = ({ searchTerm, onSearchTermChange }) => {
         style={styles.inputStyle}
         placeholder="search here ... "
         value={searchTerm}
-        onChangeText={(newSearchTerm) => onSearchTermChange(newSearchTerm)}
+        onChangeText={onSearchTermChange}
+        onEndEditing={onSearchTermSubmit}
       />
     </View>
   );
