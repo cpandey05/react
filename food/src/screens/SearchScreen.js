@@ -1,36 +1,75 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Button, ScrollView } from "react-native";
+import ResultsList from "../components/ResultsLIst";
 import SearchBar from "../components/SearchBar";
-import yelp from "../api/yelp";
+import useResults from "../hooks/useResults";
 
-const SearchScreen = () => {
+//this is navigation object coming out of the default prop which is injected over here ..
+const SearchScreen = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
+  const [searchApi, results, errorMessage] = useResults();
 
-  const searchApi = async () => {
-    const response = await yelp.get("/search", {
-      params: { limit: 50, term: { searchTerm }, location: "san jose" },
+  const filterResultsByEnergyLevel = (energyLevel) => {
+    return results.filter((result) => {
+      console.log(result.energy_level);
+      return result.energy_level === energyLevel;
     });
-    setResults(response.data.businesses);
   };
   return (
     //searchTerm is a state managed by the parent , i.e. seacrch screen which is being passed on to the search bar
     //searchTerm is an prop for the search bar which will be displayed there and wheneven a value is changed, even is propagated to the child
     //i.e. the search bat to display the new value
+    //style={{ borderWidth: 5, borderColor: "red" }} these two properties on view can be used to see the impact as how it expands all way down
+    // to accomodate all the children
+    //flex element can be used to restrict a view by acquiring all the space and rather restrict to the available size only.
+    //this is very handy .. {{ flex: 1 }} anytime if things go off screen or get cropped, may be this property need to be set
 
-    <View>
+    //instead of using <View> , we can just use a blank element as <> this will be same as setting flex property ...
+    <View style={{ flex: 1 }}>
       <SearchBar
         searchTerm={searchTerm}
-        onSearchTermChange={(newSearchTerm) => setSearchTerm(newSearchTerm)}
-        onSearchTermSubmit={() => searchApi()}
+        onSearchTermChange={setSearchTerm}
+        onSearchTermSubmit={() => searchApi(searchTerm)}
       />
-      <Text>Search .. </Text>
-      <Text>Found {results.length} results</Text>
+      <Button
+        onPress={() => searchApi(searchTerm)}
+        title="Press for searching"
+        style={{ marginLeft: 15 }}
+      ></Button>
+      <Text style={styles.textStyle}>Error .. {errorMessage}</Text>
+      {errorMessage ? (
+        <Text style={styles.textStyle}>
+          Conditional Error rendering .. {errorMessage}
+        </Text>
+      ) : null}
+      <Text style={styles.textStyle}>Search now..for {searchTerm}</Text>
+      <Text style={styles.textStyle}>Found {results.length} results there</Text>
+      <ScrollView>
+        <ResultsList
+          results={filterResultsByEnergyLevel(5)}
+          title="Highly energetic"
+          navigation={navigation}
+        />
+        <ResultsList
+          results={filterResultsByEnergyLevel(4)}
+          title="Normal energy"
+          navigation={navigation}
+        />
+        <ResultsList
+          results={filterResultsByEnergyLevel(3)}
+          title="Lazy"
+          navigation={navigation}
+        />
+      </ScrollView>
     </View>
   );
 };
 
 //again curly braces inside regular braces indiacte some objects will be instantiated and returned
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  textStyle: {
+    marginLeft: 15,
+  },
+});
 
 export default SearchScreen;

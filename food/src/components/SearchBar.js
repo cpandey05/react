@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     //to bring all the child on a single row, we use flex direction prop .. this will bring search Icon and the text input on the same row
     flexDirection: "row",
+    marginBottom: 10,
   },
   inputStyle: {
     borderColor: "yellow",
