@@ -5,7 +5,9 @@ import SearchBar from "../components/SearchBar";
 import useResults from "../hooks/useResults";
 
 //this is navigation object coming out of the default prop which is injected over here ..
-const SearchScreen = ({ navigation }) => {
+//no need to pass on the navigator like this { navigation } from parent all the way down to the child ..
+//will use withNavigation helper to make navigation directly available to the child
+const SearchScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchApi, results, errorMessage] = useResults();
 
@@ -48,18 +50,12 @@ const SearchScreen = ({ navigation }) => {
         <ResultsList
           results={filterResultsByEnergyLevel(5)}
           title="Highly energetic"
-          navigation={navigation}
         />
         <ResultsList
           results={filterResultsByEnergyLevel(4)}
           title="Normal energy"
-          navigation={navigation}
         />
-        <ResultsList
-          results={filterResultsByEnergyLevel(3)}
-          title="Lazy"
-          navigation={navigation}
-        />
+        <ResultsList results={filterResultsByEnergyLevel(3)} title="Lazy" />
       </ScrollView>
     </View>
   );
