@@ -43,7 +43,8 @@ So to navigate from the child to the detail page ..one way is to pass down the n
 when multiple element need to returned from a component then return shoul wrap it in brackets and it should not use semi colon on individual lines.. 
 
 to work with the navigation directly, we need to wrap the child element in 'withreactNavigation' -this will give access to navigation object inside the child which has been wrapped .. 
-
+ 
+ TouchableOpacity can be used to wrap a component if we want ot detect when the user touched the screen /
 
 
 
